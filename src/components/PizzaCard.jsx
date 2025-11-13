@@ -4,8 +4,8 @@ const PizzaCard = ({ pizza, onCustomize }) => {
   const { image, name, category, sizes } = pizza
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-card transition hover:-translate-y-1 hover:shadow-xl focus-within:-translate-y-1 focus-within:shadow-xl">
-      <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+    <article className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-card transition hover:-translate-y-1 hover:shadow-xl focus-within:-translate-y-1 focus-within:shadow-xl ">
+      <div className="relative h-62 w-full overflow-hidden  p-4">
         {image ? (
           <img
             src={image}
@@ -20,7 +20,7 @@ const PizzaCard = ({ pizza, onCustomize }) => {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 p-6">
+      <div className="flex flex-1 flex-col gap-4 p-2">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-brand">{category}</p>
           <h3 className="mt-2 text-xl font-semibold text-slate-900">{name}</h3>

@@ -7,20 +7,10 @@ const parsePrice = (value) => {
 }
 
 const normalizeId = (item) =>
-  item?.id ??
-  item?._id ??
-  item?.value ??
-  item?.slug ??
-  `temp-${(item?.name ?? item?.title ?? 'item').toString().replace(/\s+/g, '-').toLowerCase()}`
+  item?.id ?? `temp-${(item?.name ?? item?.pizza_name ?? 'item').toString().replace(/\s+/g, '-').toLowerCase()}`
 
 const normalizeName = (item) =>
-  item?.name ??
-  item?.pizza_name ??
-  item?.title ??
-  item?.label ??
-  item?.displayName ??
-  item?.value ??
-  'Unknown'
+  item?.name ?? item?.pizza_name ?? 'Unknown'
 
 const sizeOrder = ['personal', 'kids', 'small', 'medium', 'large', 'xl', 'xtra large', 'extra large']
 
@@ -31,33 +21,18 @@ const getSizeWeight = (label = '') => {
 }
 
 const normalizeSizes = (pizza) => {
-  const rawSizes =
-    pizza?.sizes ??
-    pizza?.pizza_prices ??
-    pizza?.sizePrices ??
-    pizza?.size_options ??
-    pizza?.priceOptions ??
-    pizza?.prices ??
-    pizza?.variants ??
-    []
+  const rawSizes = pizza?.pizza_prices ?? []
 
   const entries = []
 
   if (Array.isArray(rawSizes)) {
     rawSizes.forEach((size) => {
-      const label =
-        size?.label ??
-        size?.name ??
-        size?.size ??
-        size?.title ??
-        size?.variant ??
-        size?.key ??
-        ''
+      const label = size?.size ?? ''
 
       if (!label) return
       entries.push({
         label,
-        price: parsePrice(size?.price ?? size?.value ?? size?.amount ?? size?.cost),
+        price: parsePrice(size?.price),
       })
     })
   } else if (rawSizes && typeof rawSizes === 'object') {
@@ -77,24 +52,12 @@ const normalizeSizes = (pizza) => {
 
 export const mapPizza = (pizza) => ({
   id: normalizeId(pizza),
-  image:
-    pizza?.image ??
-    pizza?.pizza_image ??
-    pizza?.imageUrl ??
-    pizza?.image_url ??
-    pizza?.thumbnail ??
-    pizza?.photo ??
-    '',
+  image: pizza?.pizza_image ?? '',
   name: normalizeName(pizza),
   category:
-    (typeof pizza?.category === 'string'
+    typeof pizza?.category === 'string'
       ? pizza.category
-      : pizza?.category?.category_name ??
-        pizza?.category?.name ??
-        pizza?.category_name ??
-        pizza?.categoryName ??
-        pizza?.category?.title ??
-        '') || 'Uncategorized',
+      : pizza?.category?.category_name || 'Uncategorized',
   sizes: normalizeSizes(pizza),
 })
 
@@ -121,15 +84,13 @@ const isDoubleTopping = (item, normalized) => {
 
 const getCount = (item) => {
   if (Number.isFinite(item?.count) && item.count > 0) return item.count
-  if (Number.isFinite(item?.quantity) && item.quantity > 0) return item.quantity
-  if (Number.isFinite(item?.multiplier) && item.multiplier > 0) return item.multiplier
   return 1
 }
 
 const normalizeIngredient = (item) => ({
   id: normalizeId(item),
   name: normalizeName(item),
-  price: parsePrice(item?.price ?? item?.amount ?? item?.cost),
+  price: parsePrice(item?.price),
   count: getCount(item),
 })
 
